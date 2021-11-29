@@ -1,0 +1,22 @@
+body {
+    background-color: black;
+    color: white;
+}
+
+.letter-container {
+    display: flex;
+    flex-wrap: wrap;
+    width: 800px;
+    margin: auto;
+}
+
+.letter {
+    font-size: 64pt;
+    font-family: 'Courier New', Courier, monospace;
+    flex: 1 1 8.5%;
+    color: rgb(80, 80, 80);
+}
+
+.letter.on {
+    color: white;
+}
