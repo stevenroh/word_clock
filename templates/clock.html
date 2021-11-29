@@ -124,12 +124,19 @@
   </div>
   <script>
     (function() {
+      function update() {
         fetch('/leds').then((resp) => resp.json()).then(leds => {
-          console.log(leds);
+          console.log('update');
+          // console.log(leds);
+
+          document.querySelector('.letter').classList.remove('on');
           leds.forEach(led => {
             document.getElementById(`led-${led}`).classList.add("on");
-          })
+          });
         });
+      }
+      update();
+      setInterval(update, 10000);
     })();
   </script>
 {% endblock %}

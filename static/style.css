@@ -12,9 +12,12 @@ body {
 
 .letter {
     font-size: 64pt;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: 'Roboto Mono', monospace;
+    font-weight: 500;
     flex: 1 1 8.5%;
-    color: rgb(80, 80, 80);
+    color: rgb(26, 26, 26);
+    text-align: center;
+    line-height: 96%;
 }
 
 .letter.on {
