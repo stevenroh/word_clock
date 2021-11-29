@@ -77,7 +77,7 @@ def get_words():
 def power_on_word(word):
   print(f'Power ON : {word}')
 
-def leds_for_word(word):
+def leds_for_word(word, is_minutes):
   switcher = {
     'il': [0, 1],
     'est': [3, 4, 5],
@@ -94,18 +94,26 @@ def leds_for_word(word):
     'onze': [55, 56, 57, 58],
     'midi': [44, 45, 46, 47],
     'minuit': [49, 50, 51, 52, 53, 54],
-    'cinq': [94, 95, 96, 97],
-    'dix': [46, 47, 48],
-    'quart': [80, 81, 82, 83, 84],
-    'vingt': [88, 89, 90, 91, 92],
-    'vingt-cinq': [88, 89, 90, 91, 92, 93, 94, 95, 96, 97],
-    'demie': [102, 103, 104, 105, 106],
     'moins': [66, 67, 68, 69, 70],
     'et': [77, 78],
     'heure': [60, 61, 62, 63, 64],
     'heures': [60, 61, 62, 63, 64, 65],
   }
+
+  minutes_switcher = {
+    'cinq': [94, 95, 96, 97],
+    'dix': [74, 75, 76],
+    'quart': [80, 81, 82, 83, 84],
+    'vingt': [88, 89, 90, 91, 92],
+    'vingt-cinq': [88, 89, 90, 91, 92, 93, 94, 95, 96, 97],
+    'demie': [102, 103, 104, 105, 106],
+  }
+
+  if is_minutes:
+    return minutes_switcher.get(word, "Invalid word (minutes)")
+  
   return switcher.get(word, "Invalid word")
+  
 
 
 @app.route('/')
@@ -126,12 +134,15 @@ def time():
 @app.route('/leds')
 def leds_status():
   words = get_words()
+  is_minutes = False
   leds_on = []
 
   for word in words:
-    leds_on.extend(leds_for_word(word))
+    leds_on.extend(leds_for_word(word, is_minutes))
+    if "heure" in word: is_minutes = True
 
   return jsonify(leds_on)
+
 
 @app.route('/clock')
 def clock():
