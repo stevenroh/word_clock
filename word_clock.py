@@ -1,4 +1,5 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
+from iot import execute_if_valid
 import json
 import datetime
 
@@ -94,13 +95,15 @@ def leds_for_word(word, is_minutes):
     'onze': [55, 56, 57, 58],
     'midi': [44, 45, 46, 47],
     'minuit': [49, 50, 51, 52, 53, 54],
-    'moins': [66, 67, 68, 69, 70],
-    'et': [77, 78],
+#    'moins': [66, 67, 68, 69, 70],
+#    'et': [77, 78],
     'heure': [60, 61, 62, 63, 64],
     'heures': [60, 61, 62, 63, 64, 65],
   }
 
   minutes_switcher = {
+    'moins': [66, 67, 68, 69, 70],
+    'et': [77, 78],
     'cinq': [94, 95, 96, 97],
     'dix': [74, 75, 76],
     'quart': [80, 81, 82, 83, 84],
@@ -129,6 +132,12 @@ def hello():
 @app.route('/time')
 def time():
   return str(datetime.datetime.now())
+
+
+@app.route('/execute')
+def execute():
+  task = request.args.get('task')
+  return "ok" if execute_if_valid(task) else "ko"
 
 
 @app.route('/leds')
