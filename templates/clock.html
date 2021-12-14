@@ -127,9 +127,8 @@
       function update() {
         fetch('/leds').then((resp) => resp.json()).then(leds => {
           console.log('update');
-          // console.log(leds);
+          document.querySelectorAll('.letter').forEach(el => el.classList.remove('on'));
 
-          document.querySelector('.letter').classList.remove('on');
           leds.forEach(led => {
             document.getElementById(`led-${led}`).classList.add("on");
           });
