@@ -14,6 +14,11 @@ def render_clock():
   return render_template('clock.html')
 
 
+@app.route('/settings')
+def render_settings():
+  return render_template('settings.html')
+
+
 @app.route('/text')
 def render_text():
   return " ".join(clock.get_words())
