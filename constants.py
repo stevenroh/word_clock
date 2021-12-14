@@ -27,3 +27,9 @@ WORDS_MINUTES = {
   35: 'vingt-cinq', # h-25
   30: 'demie',
 }
+
+COMMANDS = {
+  'poweroff': 'shutdown -h now',
+  'reboot': 'reboot',
+  'test': 'echo test > /tmp/test.txt',
+}

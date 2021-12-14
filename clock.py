@@ -1,9 +1,8 @@
 
 import datetime
-from observer import Subscriber
 from constants import WORDS_HOURS, WORDS_MINUTES
 
-class Clock(Subscriber):
+class Clock():
   def get_words(self):
     words = []
 
@@ -26,20 +25,20 @@ class Clock(Subscriber):
     words.append(WORDS_HOURS[hours])
 
     if hours == 1:
-        words.append('heure')
+      words.append('heure')
     elif hours != 0 or hours != 12:  # No "hours" text for midnight
-        words.append('heures')
+      words.append('heures')
 
     # Display minus or plus or nothing
     if minutes == 0:
-        pass  # Display nothing
+      pass  # Display nothing
     elif minutes >= 35:
-        words.append('moins')
-        words.append(WORDS_MINUTES[minutes])
+      words.append('moins')
+      words.append(WORDS_MINUTES[minutes])
     else:
-        if minutes == 15:
-            words.append('et')
-        words.append(WORDS_MINUTES[minutes])
+      if minutes == 15 or minutes == 30:
+        words.append('et')
+      words.append(WORDS_MINUTES[minutes])
 
     return words
 
@@ -92,8 +91,6 @@ class Clock(Subscriber):
 
   def power_on_leds(self, leds_arr):
     for led in leds_arr:
-      pass
+      print(f"Power {led}")
       # power on led with gpio
 
-  def update(self, message):
-    print("Clock receive message : " + message)

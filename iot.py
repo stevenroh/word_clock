@@ -1,15 +1,8 @@
-import os
-from observer import Subscriber
-
-COMMANDS = {
-  'poweroff': 'shutdown -h now',
-  'reboot': 'reboot',
-  'test': 'echo test > /tmp/test.txt',
-}
+from constants import COMMANDS
 
 INVALID_TASK = "Invalid task"
 
-class IOTUtils(Subscriber):
+class IOTUtils():
   def execute_if_valid(self, task):
     command = COMMANDS.get(task, INVALID_TASK)
 
@@ -18,6 +11,3 @@ class IOTUtils(Subscriber):
         return True
 
     return False
-
-  def update(self, message):
-    print("IOTUtils receive message : " + message)

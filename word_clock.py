@@ -1,20 +1,22 @@
 from flask import Flask, render_template, jsonify, request
-import json
-from observer import Publisher
 from iot import IOTUtils
 from clock import Clock
+import json
 
 app = Flask(__name__)
 
-pub = Publisher()
-iot = IOTUtils("IOT utils")
-clock = Clock("Clock")
-pub.register(iot)
-pub.register(clock)
+iot = IOTUtils()
+clock = Clock()
+
 
 @app.route('/')
-def render():
+def render_clock():
   return render_template('clock.html')
+
+
+@app.route('/text')
+def render_text():
+  return " ".join(clock.get_words())
 
 
 @app.route('/execute')
