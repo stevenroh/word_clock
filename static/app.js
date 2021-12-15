@@ -20,7 +20,6 @@ function hideLoader() {
 function sendTask(task) {
   showLoader();
   fetch(`/execute?task=${task}`).then(res => {
-
     if (res.ok) {
       hideLoader();
     } else {

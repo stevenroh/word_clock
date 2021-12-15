@@ -19,6 +19,11 @@ def render_settings():
   return render_template('settings.html')
 
 
+@app.route('/animations')
+def render_animations():
+  return render_template('animations.html')
+
+
 @app.route('/text')
 def render_text():
   return " ".join(clock.get_words())
