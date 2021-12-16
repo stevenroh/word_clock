@@ -52,10 +52,14 @@ def set_clock_mode():
 
 @app.route('/show')
 def show_animation():
-  global curr_mode, curr_animation
+  global curr_mode, curr_animation, step
 
   curr_mode = ANIM_MODE
+  step = 0
+
   animation = request.args.get('animation')
+
+  print(animation)
 
   if animation == "blink":
     curr_animation = blink_animation
