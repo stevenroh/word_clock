@@ -1,9 +1,13 @@
 from flask import Flask, render_template, jsonify, request
 from iot import IOTUtils
 from clock import Clock
-import effects
+from animations import *
+from constants import ANIM_MODE, TIME_MODE
 
 import json
+
+curr_mode = TIME_MODE
+curr_animation = None
 
 app = Flask(__name__)
 
@@ -38,19 +42,30 @@ def execute():
 
 
 @app.route('/show')
-def show_effect():
-  effect = request.args.get('effect')
-  print("Apply " + effect)
-  print(blink_effect)
+def show_animation():
+  global curr_mode
+
+  curr_mode = ANIM_MODE
+
+  print(curr_mode)
+
+  animation = request.args.get('animation')
+  print("Apply " + animation)
+  print(blink_animation)
   return "ok"
 
 
 @app.route('/leds')
 def leds_status():
-  words = clock.get_words()
-  leds_on = clock.get_leds_for_words(words)
+  print(curr_mode)
 
-  return jsonify(leds_on)
+  if curr_mode == TIME_MODE:
+    words = clock.get_words()
+    leds_on = clock.get_leds_for_words(words)
+  elif curr_mode == ANIM_MODE:
+    leds_on = [1, 2]
+
+  return jsonify({'mode': 'animation' if curr_mode == ANIM_MODE else 'time', 'leds': leds_on})
 
 
 if __name__ == '__main__':

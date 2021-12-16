@@ -1,6 +1,10 @@
 function update() {
-  fetch('/leds').then((resp) => resp.json()).then(leds => {
+  fetch('/leds').then((resp) => resp.json()).then(data => {
     console.log('update');
+
+    const {leds, mode} = data;
+
+    console.log(mode);
     document.querySelectorAll('.letter').forEach(el => el.classList.remove('on'));
 
     leds.forEach(led => {
@@ -22,6 +26,17 @@ function sendTask(task) {
   fetch(`/execute?task=${task}`).then(res => {
     if (res.ok) {
       hideLoader();
+    } else {
+      console.log(res);
+      alert('Error');
+    }
+  });
+}
+
+function sendAnimation(animation) {
+  fetch(`/show?animation=${animation}`).then(res => {
+    if (res.ok) {
+
     } else {
       console.log(res);
       alert('Error');

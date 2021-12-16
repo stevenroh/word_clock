@@ -33,3 +33,6 @@ COMMANDS = {
   'reboot': 'reboot',
   'test': 'echo test > /tmp/test.txt',
 }
+
+ANIM_MODE = -1
+TIME_MODE = 1

@@ -1,8 +1,8 @@
 from .colors import *
 
-blink_effect = []
+blink_animation = []
 
-blink_effect.append(
+blink_animation.append(
     [
         [WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE],
         [WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE],
@@ -17,7 +17,7 @@ blink_effect.append(
     ]
 )
 
-blink_effect.append(
+blink_animation.append(
     [
         [OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF],
         [OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF],
