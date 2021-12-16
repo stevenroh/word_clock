@@ -1,6 +1,7 @@
 body {
     background-color: black;
     color: white;
+    font-family: 'Roboto Mono', monospace;
 }
 
 #loader {
@@ -15,7 +16,6 @@ body {
     font-size: 20pt;
     padding-top: 30vh;
     text-align: center;
-    font-family: 'Roboto Mono', monospace;
 }
 
 .content {
@@ -31,7 +31,6 @@ body {
 
 .letter {
     font-size: 8vw;
-    font-family: 'Roboto Mono', monospace;
     font-weight: 500;
     flex: 1 1 8.5%;
     color: rgb(26, 26, 26);
@@ -56,7 +55,6 @@ section.controls {
 
 .btn-control {
     background-color: black;
-    font-family: 'Roboto Mono', monospace;
     border-radius: 20%;
     text-align: center;
     height: 75px;
@@ -92,7 +90,6 @@ div.animations-container {
     width: 49%;
     height: 100px;
     background-color: black;
-    font-family: 'Roboto Mono', monospace;
     border-radius: 20px;
     text-align: center;
     border: 3px solid white;

@@ -1,6 +1,8 @@
 from flask import Flask, render_template, jsonify, request
 from iot import IOTUtils
 from clock import Clock
+import effects
+
 import json
 
 app = Flask(__name__)
@@ -33,6 +35,14 @@ def render_text():
 def execute():
   task = request.args.get('task')
   return "ok" if iot.execute_if_valid(task) else "ko"
+
+
+@app.route('/show')
+def show_effect():
+  effect = request.args.get('effect')
+  print("Apply " + effect)
+  print(blink_effect)
+  return "ok"
 
 
 @app.route('/leds')
