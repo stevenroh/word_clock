@@ -2,12 +2,13 @@ from flask import Flask, render_template, jsonify, request
 from iot import IOTUtils
 from clock import Clock
 from animations import *
-from constants import ANIM_MODE, TIME_MODE
+from constants import ANIM_MODE, CLOCK_MODE
 
 import json
 
-curr_mode = TIME_MODE
+curr_mode = CLOCK_MODE
 curr_animation = None
+step = 0
 
 app = Flask(__name__)
 
@@ -25,9 +26,9 @@ def render_settings():
   return render_template('settings.html')
 
 
-@app.route('/animations')
-def render_animations():
-  return render_template('animations.html')
+@app.route('/programs')
+def render_programs():
+  return render_template('programs.html')
 
 
 @app.route('/text')
@@ -41,29 +42,48 @@ def execute():
   return "ok" if iot.execute_if_valid(task) else "ko"
 
 
-@app.route('/show')
-def show_animation():
+@app.route('/clock_mode')
+def set_clock_mode():
   global curr_mode
 
+  curr_mode = CLOCK_MODE
+  return "ok"
+
+
+@app.route('/show')
+def show_animation():
+  global curr_mode, curr_animation
+
   curr_mode = ANIM_MODE
-
-  print(curr_mode)
-
   animation = request.args.get('animation')
-  print("Apply " + animation)
-  print(blink_animation)
+
+  if animation == "blink":
+    curr_animation = blink_animation
+
+  if animation == "snake":
+    curr_animation = snake_animation
+
   return "ok"
 
 
 @app.route('/leds')
 def leds_status():
-  print(curr_mode)
+  global step, curr_animation
 
-  if curr_mode == TIME_MODE:
+  if curr_mode == CLOCK_MODE:
     words = clock.get_words()
     leds_on = clock.get_leds_for_words(words)
   elif curr_mode == ANIM_MODE:
-    leds_on = [1, 2]
+    leds_on = []
+
+    print(curr_animation)
+
+    if curr_animation is not None:
+      leds_on = [item for sublist in curr_animation[step] for item in sublist]
+      step += 1
+
+      if step >= len(curr_animation):
+        step = 0
 
   return jsonify({'mode': 'animation' if curr_mode == ANIM_MODE else 'time', 'leds': leds_on})
 

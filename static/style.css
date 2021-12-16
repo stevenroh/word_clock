@@ -30,12 +30,13 @@ body {
 }
 
 .letter {
-    font-size: 8vw;
+    font-size: 6.4vw;
     font-weight: 500;
     flex: 1 1 8.5%;
     color: rgb(26, 26, 26);
     text-align: center;
-    line-height: 8vw;
+    line-height: 6.8vw;
+    border: 2px solid black;
 }
 
 .letter.on {
@@ -67,11 +68,6 @@ section.controls {
     padding: 10px;
 }
 
-a.btn-control svg {
-    /* height: 50px;
-    width: 50px; */
-}
-
 .btn-control:hover {
     border-color: black;
     background-color: white;
@@ -79,14 +75,14 @@ a.btn-control svg {
     transform: scale(1.2);
 }
 
-/* Animations control */
-div.animations-container {
+/* Programs control */
+div.programs-container {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
 }
 
-.btn-animation {
+.btn-program {
     width: 49%;
     height: 100px;
     background-color: black;
@@ -101,9 +97,14 @@ div.animations-container {
     font-size: 22pt;
 }
 
-.btn-animation:hover {
+.btn-program:hover {
     border-color: black;
     background-color: white;
     color: black;
     transform: scale(1.1);
+}
+
+.btn-program:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
 }
