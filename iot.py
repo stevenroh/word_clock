@@ -1,15 +1,10 @@
+from constants import COMMANDS
 import os
-
-COMMANDS = {
-    'poweroff': 'shutdown -h now',
-    'reboot': 'reboot',
-    'test': 'echo test > /tmp/test.txt',
-    'on': '',
-}
 
 INVALID_TASK = "Invalid task"
 
-def execute_if_valid(task):
+class IOTUtils():
+  def execute_if_valid(self, task):
     command = COMMANDS.get(task, INVALID_TASK)
 
     if command is not INVALID_TASK:

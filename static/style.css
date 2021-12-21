@@ -1,25 +1,110 @@
 body {
     background-color: black;
     color: white;
+    font-family: 'Roboto Mono', monospace;
+}
+
+#loader {
+    display: none;
+    background-color: black;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    color: white;
+    font-size: 20pt;
+    padding-top: 30vh;
+    text-align: center;
+}
+
+.content {
+    margin: auto;
+    width: 100%;
+    max-width: 1400px;
 }
 
 .letter-container {
     display: flex;
     flex-wrap: wrap;
-    width: 800px;
-    margin: auto;
 }
 
 .letter {
-    font-size: 64pt;
-    font-family: 'Roboto Mono', monospace;
+    font-size: 6.4vw;
     font-weight: 500;
     flex: 1 1 8.5%;
     color: rgb(26, 26, 26);
     text-align: center;
-    line-height: 96%;
+    line-height: 6.8vw;
+    border: 2px solid black;
 }
 
 .letter.on {
     color: white;
+}
+
+
+/* Remote control */
+section.controls {
+    position: fixed;
+    left: 10px;
+    bottom: 10px;
+    display: flex;
+    gap: 8px;
+    padding: 10px 15px;
+}
+
+.btn-control {
+    background-color: black;
+    border-radius: 20%;
+    text-align: center;
+    height: 75px;
+    width: 75px;
+    border: 3px solid white;
+    color: white;
+    font-weight: bold;
+    transition: transform 0.1s ease;
+    box-sizing: border-box;
+    padding: 10px;
+}
+
+.btn-control:hover {
+    border-color: black;
+    background-color: white;
+    color: black;
+    transform: scale(1.2);
+}
+
+/* Programs control */
+div.programs-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.btn-program {
+    width: 49%;
+    height: 100px;
+    background-color: black;
+    border-radius: 20px;
+    text-align: center;
+    border: 3px solid white;
+    color: white;
+    font-weight: bold;
+    transition: transform 0.1s ease;
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 22pt;
+}
+
+.btn-program:hover {
+    border-color: black;
+    background-color: white;
+    color: black;
+    transform: scale(1.1);
+}
+
+.btn-program:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
 }

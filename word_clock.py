@@ -1,161 +1,95 @@
 from flask import Flask, render_template, jsonify, request
-from iot import execute_if_valid
+from iot import IOTUtils
+from clock import Clock
+from animations import *
+from constants import ANIM_MODE, CLOCK_MODE
+
 import json
-import datetime
+
+curr_mode = CLOCK_MODE
+curr_animation = None
+step = 0
 
 app = Flask(__name__)
 
-WORDS_HOURS = {
-  1: 'une',
-  2: 'deux',
-  3: 'trois',
-  4: 'quatre',
-  5: 'cinq',
-  6: 'six',
-  7: 'sept',
-  8: 'huit',
-  9: 'neuf',
-  10: 'dix',
-  11: 'onze',
-  12: 'midi',
-  0: 'minuit',
-}
-
-WORDS_MINUTES = {
-  5: 'cinq',
-  55: 'cinq',
-  10: 'dix',
-  50: 'dix',
-  15: 'quart',
-  45: 'quart',
-  20: 'vingt',
-  40: 'vingt',
-  25: 'vingt-cinq', # h+25
-  35: 'vingt-cinq', # h-25
-  30: 'demie',
-}
-
-def get_words():
-  words = []
-
-  words.append('il')
-  words.append('est')
-
-  now = datetime.datetime.now()
-  hours = now.hour
-  minutes = now.minute - (now.minute % 5)
-
-  # 24h to 12h
-  if hours > 12:
-    hours -= 12
-
-  # Handle specific case when we want to display hours minus minutes
-  if minutes >= 35:
-    hours += 1
-  
-  # Display hour text
-  words.append(WORDS_HOURS[hours])
-  
-  if hours == 1:
-    words.append('heure')
-  elif hours != 0 or hours != 12: # No "hours" text for midnight
-    words.append('heures')
-
-  # Display minus or plus or nothing
-  if minutes == 0:
-    pass # Display nothing
-  elif minutes >= 35:
-    words.append('moins')
-    words.append(WORDS_MINUTES[minutes])
-  else:
-    if minutes == 15:
-      words.append('et')
-    words.append(WORDS_MINUTES[minutes])
-
-  return words
-
-
-def power_on_word(word):
-  print(f'Power ON : {word}')
-
-def leds_for_word(word, is_minutes):
-  switcher = {
-    'il': [0, 1],
-    'est': [3, 4, 5],
-    'une': [26, 27, 28],
-    'deux': [7, 8, 9, 10],
-    'trois': [17, 18, 19, 20, 21],
-    'quatre': [11, 12, 13, 14, 15, 16],
-    'cinq': [40, 41, 42, 43],
-    'six': [37, 38, 39],
-    'sept': [29, 30, 31, 32],
-    'huit': [33, 34, 35, 36],
-    'neuf': [22, 23, 24, 25],
-    'dix': [46, 46, 47],
-    'onze': [55, 56, 57, 58],
-    'midi': [44, 45, 46, 47],
-    'minuit': [49, 50, 51, 52, 53, 54],
-#    'moins': [66, 67, 68, 69, 70],
-#    'et': [77, 78],
-    'heure': [60, 61, 62, 63, 64],
-    'heures': [60, 61, 62, 63, 64, 65],
-  }
-
-  minutes_switcher = {
-    'moins': [66, 67, 68, 69, 70],
-    'et': [77, 78],
-    'cinq': [94, 95, 96, 97],
-    'dix': [74, 75, 76],
-    'quart': [80, 81, 82, 83, 84],
-    'vingt': [88, 89, 90, 91, 92],
-    'vingt-cinq': [88, 89, 90, 91, 92, 93, 94, 95, 96, 97],
-    'demie': [102, 103, 104, 105, 106],
-  }
-
-  if is_minutes:
-    return minutes_switcher.get(word, "Invalid word (minutes)")
-  
-  return switcher.get(word, "Invalid word")
-  
+iot = IOTUtils()
+clock = Clock()
 
 
 @app.route('/')
-def hello():
-  words = get_words()
-
-  for word in words:
-    power_on_word(word)
-
-  return ' '.join(words)
+def render_clock():
+  return render_template('clock.html')
 
 
-@app.route('/time')
-def time():
-  return str(datetime.datetime.now())
+@app.route('/settings')
+def render_settings():
+  return render_template('settings.html')
+
+
+@app.route('/programs')
+def render_programs():
+  return render_template('programs.html')
+
+
+@app.route('/text')
+def render_text():
+  return " ".join(clock.get_words())
 
 
 @app.route('/execute')
 def execute():
   task = request.args.get('task')
-  return "ok" if execute_if_valid(task) else "ko"
+  return "ok" if iot.execute_if_valid(task) else "ko"
+
+
+@app.route('/clock_mode')
+def set_clock_mode():
+  global curr_mode
+
+  curr_mode = CLOCK_MODE
+  return "ok"
+
+
+@app.route('/show')
+def show_animation():
+  global curr_mode, curr_animation, step
+
+  curr_mode = ANIM_MODE
+  step = 0
+
+  animation = request.args.get('animation')
+
+  print(animation)
+
+  if animation == "blink":
+    curr_animation = blink_animation
+
+  if animation == "snake":
+    curr_animation = snake_animation
+
+  return "ok"
 
 
 @app.route('/leds')
 def leds_status():
-  words = get_words()
-  is_minutes = False
-  leds_on = []
+  global step, curr_animation
 
-  for word in words:
-    leds_on.extend(leds_for_word(word, is_minutes))
-    if "heure" in word: is_minutes = True
+  if curr_mode == CLOCK_MODE:
+    words = clock.get_words()
+    leds_on = clock.get_leds_for_words(words)
+  elif curr_mode == ANIM_MODE:
+    leds_on = []
 
-  return jsonify(leds_on)
+    print(curr_animation)
 
+    if curr_animation is not None:
+      leds_on = [item for sublist in curr_animation[step] for item in sublist]
+      step += 1
 
-@app.route('/clock')
-def clock():
-  return render_template('clock.html')
+      if step >= len(curr_animation):
+        step = 0
+
+  return jsonify({'mode': 'animation' if curr_mode == ANIM_MODE else 'time', 'leds': leds_on})
 
 
 if __name__ == '__main__':
