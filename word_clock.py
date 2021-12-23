@@ -50,6 +50,17 @@ def set_clock_mode():
   return "ok"
 
 
+@app.route('/update')
+def update_leds():
+  global clock
+
+  words = clock.get_words()
+  leds_on = clock.get_leds_for_words(words)
+
+  clock.power_on_leds(leds_on)
+  return "ok"
+
+
 @app.route('/show')
 def show_animation():
   global curr_mode, curr_animation, step
