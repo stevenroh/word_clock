@@ -1,8 +1,10 @@
-
 import datetime
 from constants import WORDS_HOURS, WORDS_MINUTES
 
 class Clock():
+  def __init__(self, iot):
+    self.iot = iot
+
   def get_words(self):
     words = []
 
@@ -91,6 +93,5 @@ class Clock():
 
   def power_on_leds(self, leds_arr):
     for led in leds_arr:
-      print(f"Power {led}")
-      # power on led with gpio
+      self.iot.power_on_led(led)
 

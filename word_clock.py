@@ -13,7 +13,7 @@ step = 0
 app = Flask(__name__)
 
 iot = IOTUtils()
-clock = Clock()
+clock = Clock(iot)
 
 
 @app.route('/')
@@ -47,6 +47,17 @@ def set_clock_mode():
   global curr_mode
 
   curr_mode = CLOCK_MODE
+  return "ok"
+
+
+@app.route('/update')
+def update_leds():
+  global clock
+
+  words = clock.get_words()
+  leds_on = clock.get_leds_for_words(words)
+
+  clock.power_on_leds(leds_on)
   return "ok"
 
 
