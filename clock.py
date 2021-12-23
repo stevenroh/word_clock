@@ -4,8 +4,6 @@ from constants import WORDS_HOURS, WORDS_MINUTES
 class Clock():
   def __init__(self, iot):
     self.iot = iot
-    self.iot.init_gpio()
-
 
   def get_words(self):
     words = []
