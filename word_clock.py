@@ -13,7 +13,7 @@ step = 0
 app = Flask(__name__)
 
 iot = IOTUtils()
-clock = Clock()
+clock = Clock(iot)
 
 
 @app.route('/')
