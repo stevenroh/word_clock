@@ -6,7 +6,7 @@ import neopixel
 INVALID_TASK = "Invalid task"
 LEDS_PIN = board.D18
 NUM_PIXELS = 110
-BRIGHTNESS = 0.2
+BRIGHTNESS = 1
 ORDER = neopixel.RGB
 
 class IOTUtils():
