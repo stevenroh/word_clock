@@ -6,6 +6,8 @@ import time
 from clock import Clock
 from constants import COMMANDS
 from animations import colors
+from animations import *
+from utils import get_fixed_led_id
 
 INVALID_TASK = "Invalid task"
 LEDS_PIN = board.D18
@@ -15,6 +17,7 @@ ORDER = neopixel.GRB
 
 class HWIOTUtils():
   def __init__(self):
+    self.playing_animation = False
     self.pixels = neopixel.NeoPixel(
       LEDS_PIN, NUM_PIXELS, brightness=BRIGHTNESS, auto_write=False, pixel_order=ORDER
     )
@@ -27,15 +30,16 @@ class HWIOTUtils():
     
     threading.Timer(5.0, self.update_hw).start()
 
-  def update_hw(self):
-    print("update_hw")
-    words = Clock().get_words()
-    leds_on = Clock().get_leds_for_words(words)
+  def update_hw(self):  
+    if not self.playing_animation:
+      print("update_hw")
+      words = Clock().get_words()
+      leds_on = Clock().get_leds_for_words(words)
 
-    print(words)
+      print(words)
 
-    self.power_off_all()
-    self.power_on_leds(leds_on, colors.WHITE)
+      self.power_off_all()
+      self.power_on_leds(leds_on, colors.WHITE)
 
   def power_off_all(self):
     self.pixels.fill(colors.OFF)
@@ -49,6 +53,24 @@ class HWIOTUtils():
         return True
 
     return False
+
+  def set_animation_playing(self, status):
+    self.playing_animation = status
+
+  def set_animation(self, animation, speed):
+    self.playing_animation = True
+    animation_length = len(animation)
+
+    for step in range(animation_length):
+      leds = [item for sublist in animation[step] for item in sublist]
+
+      for idx, val in enumerate(leds):
+        print(val)
+        self.power_on_led(get_fixed_led_id(idx), val)
+      
+      time.sleep(speed)
+
+    self.playing_animation = False
 
   def power_on_led(self, led, color):
     self.pixels[led] = color

@@ -1,18 +1,11 @@
-from threading import current_thread
 from constants import MATRIX_WIDTH
 
-LINES_TO_INVERT  = [0, 2, 4, 6, 8]
+LINES_TO_INVERT = [3]
 
-def prepare_matrix(arr):
-  new_arr = []
+def get_fixed_led_id(id):
+  current_line = id // MATRIX_WIDTH
 
-  for item in arr:
-    current_line = item // MATRIX_WIDTH
-    if current_line in LINES_TO_INVERT:
-      new_value = MATRIX_WIDTH * (current_line + 1) - item
-      # print("invert " + str(current_line) + " change " + str(item) + " with " + str(new_value))
-      new_arr.append(new_value)
-    else:
-      new_arr.append(item)
+  if current_line in LINES_TO_INVERT:
+    return (MATRIX_WIDTH * (current_line + 1)) - id
   
-  return new_arr
+  return id

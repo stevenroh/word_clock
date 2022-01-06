@@ -40,6 +40,8 @@ def execute():
 def set_clock_mode():
   global curr_mode
 
+  hw_iot.set_animation_mode(False)
+
   curr_mode = CLOCK_MODE
   return "ok"
 
@@ -59,6 +61,8 @@ def show_animation():
 
   if animation == "snake":
     curr_animation = snake_animation
+
+  hw_iot.set_animation(curr_animation, 0.1)
 
   return "ok"
 
