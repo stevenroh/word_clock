@@ -1,25 +1,19 @@
 from flask import Flask, render_template, jsonify, request
-from iot import IOTUtils
+from hw_iot import HWIOTUtils
 from clock import Clock
 from animations import *
 from constants import ANIM_MODE, CLOCK_MODE
-
-import json
 
 curr_mode = CLOCK_MODE
 curr_animation = None
 step = 0
 
 app = Flask(__name__)
-
-iot = IOTUtils()
-clock = Clock(iot)
-
+hw_iot = HWIOTUtils()
 
 @app.route('/')
 def render_clock():
   return render_template('clock.html')
-
 
 @app.route('/settings')
 def render_settings():
@@ -33,13 +27,13 @@ def render_programs():
 
 @app.route('/text')
 def render_text():
-  return " ".join(clock.get_words())
+  return " ".join(Clock().get_words())
 
 
 @app.route('/execute')
 def execute():
   task = request.args.get('task')
-  return "ok" if iot.execute_if_valid(task) else "ko"
+  return "ok" if hw_iot.execute_if_valid(task) else "ko"
 
 
 @app.route('/clock_mode')
@@ -48,18 +42,6 @@ def set_clock_mode():
 
   curr_mode = CLOCK_MODE
   return "ok"
-
-
-@app.route('/update')
-def update_leds():
-  global clock
-
-  words = clock.get_words()
-  leds_on = clock.get_leds_for_words(words)
-
-  clock.power_on_leds(leds_on)
-  return "ok"
-
 
 @app.route('/show')
 def show_animation():
@@ -86,8 +68,8 @@ def leds_status():
   global step, curr_animation
 
   if curr_mode == CLOCK_MODE:
-    words = clock.get_words()
-    leds_on = clock.get_leds_for_words(words)
+    words = Clock().get_words()
+    leds_on = Clock().get_leds_for_words(words)
   elif curr_mode == ANIM_MODE:
     leds_on = []
 

@@ -1,11 +1,10 @@
 import datetime
 from constants import WORDS_HOURS, WORDS_MINUTES
+from utils import prepare_matrix
 
 class Clock():
-  def __init__(self, iot):
-    self.iot = iot
-
-  def get_words(self):
+  @staticmethod
+  def get_words():
     words = []
 
     words.append('il')
@@ -44,54 +43,53 @@ class Clock():
 
     return words
 
-  def get_led_for_word(self, word, is_minutes):
+  @staticmethod
+  def get_led_for_word(word, is_minutes):
     switcher = {
-      'il': [0, 1],
-      'est': [3, 4, 5],
-      'une': [26, 27, 28],
-      'deux': [7, 8, 9, 10],
-      'trois': [17, 18, 19, 20, 21],
-      'quatre': [11, 12, 13, 14, 15, 16],
-      'cinq': [40, 41, 42, 43],
-      'six': [37, 38, 39],
-      'sept': [29, 30, 31, 32],
-      'huit': [33, 34, 35, 36],
-      'neuf': [22, 23, 24, 25],
-      'dix': [46, 47, 48],
-      'onze': [55, 56, 57, 58],
-      'midi': [44, 45, 46, 47],
-      'minuit': [49, 50, 51, 52, 53, 54],
-      'heure': [60, 61, 62, 63, 64],
-      'heures': [60, 61, 62, 63, 64, 65],
+      'il': [108, 109],
+      'est': [104, 105, 106],
+      'une': [81, 82, 83],
+      'deux': [99, 100, 101, 102],
+      'trois': [88, 89, 90, 91, 92],
+      'quatre': [93, 94, 95, 96, 97, 98],
+      'cinq': [66, 67, 68, 69],
+      'six': [70, 71, 72],
+      'sept': [77, 78, 79, 80],
+      'huit': [73, 74, 75, 76],
+      'neuf': [84, 85, 86, 87],
+      'dix': [61, 62, 63],
+      'onze': [51, 52, 53, 54],
+      'midi': [62, 63, 64, 65],
+      'minuit': [55, 56, 57, 58, 59, 60],
+      'heure': [45, 46, 47, 48, 49],
+      'heures': [44, 45, 46, 47, 48, 49],
     }
 
     minutes_switcher = {
-      'moins': [66, 67, 68, 69, 70],
-      'et': [77, 78],
-      'cinq': [94, 95, 96, 97],
-      'dix': [74, 75, 76],
-      'quart': [80, 81, 82, 83, 84],
-      'vingt': [88, 89, 90, 91, 92],
-      'vingt-cinq': [88, 89, 90, 91, 92, 93, 94, 95, 96, 97],
-      'demie': [102, 103, 104, 105, 106],
+      'moins': [39, 40, 41, 42, 43],
+      'et': [31, 32],
+      'cinq': [12, 13, 14, 15],
+      'dix': [33, 34, 35],
+      'quart': [25, 26, 27, 28, 29],
+      'vingt': [17, 18, 19, 20, 12],
+      'vingt-cinq': [12, 13, 14, 15, 16, 17, 18, 19, 20],
+      'demie': [3, 4, 5, 6, 7],
     }
 
     if is_minutes:
       return minutes_switcher.get(word, "Invalid word (minutes)")
 
     return switcher.get(word, "Invalid word")
-
-  def get_leds_for_words(self, words):
+  
+  @staticmethod
+  def get_leds_for_words(words):
     is_minutes = False
     leds_on = []
 
     for word in words:
-      leds_on.extend(self.get_led_for_word(word, is_minutes))
+      leds_on.extend(Clock().get_led_for_word(word, is_minutes))
       if "heure" in word: is_minutes = True
     
-    return leds_on
+    prepared_leds_on = prepare_matrix(leds_on)
 
-  def power_on_leds(self, leds_arr):
-    for led in leds_arr:
-      self.iot.power_on_led(led)
-
+    return prepared_leds_on
