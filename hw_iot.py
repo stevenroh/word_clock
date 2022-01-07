@@ -15,11 +15,13 @@ NUM_PIXELS = 110
 BRIGHTNESS = 1
 ORDER = neopixel.GRB
 
-UPDATE_TIME = 1 * 60
+UPDATE_TIME = 5
 
 class HWIOTUtils():
   def __init__(self):
     self.playing_animation = False
+    self.last_content = None
+
     self.pixels = neopixel.NeoPixel(
       LEDS_PIN, NUM_PIXELS, brightness=BRIGHTNESS, auto_write=False, pixel_order=ORDER
     )
@@ -34,14 +36,19 @@ class HWIOTUtils():
 
   def update_hw(self):  
     if not self.playing_animation:
-      print("update_hw")
+      print("Update HW")
       words = Clock().get_words()
-      leds_on = Clock().get_leds_for_words(words)
+  
+      if self.last_content != words:
+        self.last_content = words
+        print("Update needed")
+    
+        leds_on = Clock().get_leds_for_words(words)
 
-      print(words)
-
-      self.power_off_all()
-      self.power_on_leds(leds_on, colors.WHITE)
+        self.power_off_all()
+        self.power_on_leds(leds_on, colors.WHITE)
+      else:
+        print("No update needed")
 
     threading.Timer(UPDATE_TIME, self.update_hw).start()
 
@@ -63,23 +70,28 @@ class HWIOTUtils():
 
   def set_animation(self, animation, speed):
     self.playing_animation = True
+    self.last_content = None
     animation_length = len(animation)
 
-    for step in range(animation_length):
+    for step in range(animation_length):    
       leds = [item for sublist in animation[step] for item in sublist]
-      print(leds)
 
       for idx, val in enumerate(leds):
-        print(val)
-        self.power_on_led(get_fixed_led_id(idx), val)
+        self.power_on_led(get_fixed_led_id(idx), val, update=False)
       
+      self.pixels.show()
       time.sleep(speed)
+
+      if self.playing_animation is False:
+        return
 
     self.playing_animation = False
 
-  def power_on_led(self, led, color):
+  def power_on_led(self, led, color, update=True):
     self.pixels[led] = color
-    self.pixels.show()
+
+    if update:
+      self.pixels.show()
 
   def power_on_leds(self, leds_arr, color):
     for led in leds_arr:

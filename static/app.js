@@ -1,26 +1,11 @@
 function update() {
-  fetch('/leds').then((resp) => resp.json()).then(data => {
+  fetch('/leds').then((resp) => resp.json()).then(leds => {
     console.log('update');
 
-    const {leds, mode} = data;
-
-    console.log(mode);
-
     document.querySelectorAll('.letter').forEach(el => el.classList.remove('on'));
-
-    if (mode === 'time') {
-      leds.forEach(led => {
-        document.getElementById(`led-${led}`).classList.add("on");
-      });
-    }
-
-    if (mode === 'animation') {
-      leds.forEach((led, idx) => {
-        console.log(led, idx)
-        document.getElementById(`led-${idx}`).style.backgroundColor = `rgb(${led[0]}, ${led[1]}, ${led[2]})`;
-        document.getElementById(`led-${idx}`).style.color = `rgb(${led[0]}, ${led[1]}, ${led[2]})`;
-      });
-    }
+    leds.forEach(led => {
+      document.getElementById(`led-${led}`).classList.add("on");
+    });
   });
 }
 
@@ -47,7 +32,7 @@ function sendTask(task) {
 function sendAnimation(animation) {
   fetch(`/show?animation=${animation}`).then(res => {
     if (res.ok) {
-      window.location = '/'
+      // window.location = '/'
     } else {
       console.log(res);
       alert('Error');
@@ -59,7 +44,7 @@ function sendAnimation(animation) {
 function enableClockMode() {
   fetch('/clock_mode').then(res => {
     if (res.ok) {
-      window.location = '/'
+      // window.location = '/'
     } else {
       console.log(res);
       alert('Error');
