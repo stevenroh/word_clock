@@ -15,6 +15,8 @@ NUM_PIXELS = 110
 BRIGHTNESS = 1
 ORDER = neopixel.GRB
 
+UPDATE_TIME = 1 * 60
+
 class HWIOTUtils():
   def __init__(self):
     self.playing_animation = False
@@ -28,7 +30,7 @@ class HWIOTUtils():
       self.power_on_led(i, colors.WHITE)
       time.sleep(0.01)
     
-    threading.Timer(5.0, self.update_hw).start()
+    threading.Timer(UPDATE_TIME, self.update_hw).start()
 
   def update_hw(self):  
     if not self.playing_animation:
@@ -40,6 +42,8 @@ class HWIOTUtils():
 
       self.power_off_all()
       self.power_on_leds(leds_on, colors.WHITE)
+
+    threading.Timer(UPDATE_TIME, self.update_hw).start()
 
   def power_off_all(self):
     self.pixels.fill(colors.OFF)

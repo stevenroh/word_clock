@@ -40,7 +40,7 @@ def execute():
 def set_clock_mode():
   global curr_mode
 
-  hw_iot.set_animation_mode(False)
+  hw_iot.set_animation_playing(False)
 
   curr_mode = CLOCK_MODE
   return "ok"
