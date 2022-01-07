@@ -63,6 +63,7 @@ class HWIOTUtils():
 
     for step in range(animation_length):
       leds = [item for sublist in animation[step] for item in sublist]
+      print(leds)
 
       for idx, val in enumerate(leds):
         print(val)
