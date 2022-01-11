@@ -39,6 +39,10 @@ def set_clock_mode():
 @app.route('/show')
 def show_animation():
   animation = request.args.get('animation')
+  speed = request.args.get('speed')
+
+  if speed is None:
+    speed = 0.2
 
   if animation == "blink":
     curr_animation = blink_animation
@@ -52,7 +56,7 @@ def show_animation():
   if animation == "water":
     curr_animation = water_animation
 
-  hw_iot.set_animation(curr_animation, 0.1)
+  hw_iot.set_animation(curr_animation, speed)
 
   return "ok"
 
