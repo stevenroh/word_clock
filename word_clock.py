@@ -1,25 +1,14 @@
 from flask import Flask, render_template, jsonify, request
-from iot import IOTUtils
+from hw_iot import HWIOTUtils
 from clock import Clock
 from animations import *
-from constants import ANIM_MODE, CLOCK_MODE
-
-import json
-
-curr_mode = CLOCK_MODE
-curr_animation = None
-step = 0
 
 app = Flask(__name__)
-
-iot = IOTUtils()
-clock = Clock(iot)
-
+hw_iot = HWIOTUtils()
 
 @app.route('/')
 def render_clock():
   return render_template('clock.html')
-
 
 @app.route('/settings')
 def render_settings():
@@ -33,44 +22,27 @@ def render_programs():
 
 @app.route('/text')
 def render_text():
-  return " ".join(clock.get_words())
+  return " ".join(Clock().get_words())
 
 
 @app.route('/execute')
 def execute():
   task = request.args.get('task')
-  return "ok" if iot.execute_if_valid(task) else "ko"
+  return "ok" if hw_iot.execute_if_valid(task) else "ko"
 
 
 @app.route('/clock_mode')
 def set_clock_mode():
-  global curr_mode
-
-  curr_mode = CLOCK_MODE
+  hw_iot.set_animation_playing(False)
   return "ok"
-
-
-@app.route('/update')
-def update_leds():
-  global clock
-
-  words = clock.get_words()
-  leds_on = clock.get_leds_for_words(words)
-
-  clock.power_on_leds(leds_on)
-  return "ok"
-
 
 @app.route('/show')
 def show_animation():
-  global curr_mode, curr_animation, step
-
-  curr_mode = ANIM_MODE
-  step = 0
-
   animation = request.args.get('animation')
+  speed = request.args.get('speed')
 
-  print(animation)
+  if speed is None:
+    speed = 0.2
 
   if animation == "blink":
     curr_animation = blink_animation
@@ -78,29 +50,23 @@ def show_animation():
   if animation == "snake":
     curr_animation = snake_animation
 
+  if animation == "fill":
+    curr_animation = fill_animation
+
+  if animation == "water":
+    curr_animation = water_animation
+
+  hw_iot.set_animation(curr_animation, speed)
+
   return "ok"
 
 
 @app.route('/leds')
 def leds_status():
-  global step, curr_animation
-
-  if curr_mode == CLOCK_MODE:
-    words = clock.get_words()
-    leds_on = clock.get_leds_for_words(words)
-  elif curr_mode == ANIM_MODE:
-    leds_on = []
-
-    print(curr_animation)
-
-    if curr_animation is not None:
-      leds_on = [item for sublist in curr_animation[step] for item in sublist]
-      step += 1
-
-      if step >= len(curr_animation):
-        step = 0
-
-  return jsonify({'mode': 'animation' if curr_mode == ANIM_MODE else 'time', 'leds': leds_on})
+  words = Clock().get_words()
+  leds_on = Clock().get_leds_for_words(words)
+ 
+  return jsonify(leds_on)
 
 
 if __name__ == '__main__':

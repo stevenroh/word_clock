@@ -34,5 +34,5 @@ COMMANDS = {
   'test': 'echo test > /tmp/test.txt',
 }
 
-ANIM_MODE = -1
-CLOCK_MODE = 1
+MATRIX_WIDTH = 11
+MATRIX_HEIGHT = 10
