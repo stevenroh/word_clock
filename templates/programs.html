@@ -1,14 +1,37 @@
 {% extends 'base.html' %}
 
+{% block title %}
+Programs
+{% endblock %}
+
 {% block content %}
   <h1>Programs</h1>
 
   <div class="programs-container">
     <button class="btn-program" onclick="enableClockMode()">Clock mode</button>
-    <button class="btn-program" onclick="sendAnimation('blink')">Blink</button>
-    <button class="btn-program" onclick="sendAnimation('snake')">Snake</button>
-    <button class="btn-program" onclick="sendAnimation('fill')">Fill</button>
-    <button class="btn-program" onclick="sendAnimation('water')">Water</button>
-    <button class="btn-program" disabled onclick="sendAnimation('translation')">Translation</button>
+    <button class="btn-program" onclick="triggerEffect('blink')">Blink</button>
+    <button class="btn-program" onclick="triggerEffect('snake')">Snake</button>
+    <button class="btn-program" onclick="triggerEffect('fill')">Fill</button>
+    <button class="btn-program" onclick="triggerEffect('water')">Water</button>
+    <button class="btn-program" onclick="triggerEffect('water2')">Water 2</button>
+    <button class="btn-program" disabled onclick="triggerEffect('translation')">Translation</button>
+
+    <label for="speed">Speed (ms)</label><input type="text" name="speed" id="speed" value="500">
   </div>
+
+  <script>
+    var speed = 500;
+    function triggerEffect(effectName) {
+      sendAnimation(effectName, speed);
+    }
+
+    (function() {
+
+      document.getElementById('speed').addEventListener('keyup', function() {
+        console.log(this.value);
+        speed = this.value;
+      });
+    })();
+    
+  </script>
 {% endblock %}

@@ -29,8 +29,9 @@ function sendTask(task) {
   });
 }
 
-function sendAnimation(animation) {
-  fetch(`/show?animation=${animation}`).then(res => {
+function sendAnimation(animation, speed) {
+  speedSec = speed / 1000;
+  fetch(`/show?animation=${animation}&speed=${speedSec}`).then(res => {
     if (res.ok) {
       // window.location = '/'
     } else {
