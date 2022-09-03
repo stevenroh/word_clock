@@ -1,98 +1,115 @@
+"Utils to communicate with Hardware"
+
 import threading
 import os
 import board
 import neopixel
 import time
+
 from clock import Clock
-from constants import COMMANDS
+
+from constants import COMMANDS, UPDATE_TIME_SECONDS, NUM_PIXELS, BRIGHTNESS
 from animations import colors
 from animations import *
+
 from utils import get_fixed_led_id
 
 INVALID_TASK = "Invalid task"
+
 LEDS_PIN = board.D18
-NUM_PIXELS = 110
-BRIGHTNESS = 1
 ORDER = neopixel.GRB
 
-UPDATE_TIME = 5
-
 class HWIOTUtils():
-  def __init__(self):
-    self.playing_animation = False
-    self.last_content = None
+    "Utils to communicate with Hardware"
 
-    self.pixels = neopixel.NeoPixel(
-      LEDS_PIN, NUM_PIXELS, brightness=BRIGHTNESS, auto_write=False, pixel_order=ORDER
-    )
+    def __init__(self):
+        self.playing_animation = False
+        self.last_content = None
 
-    self.power_off_all()
-
-    for i in range(NUM_PIXELS):
-      self.power_on_led(i, colors.WHITE)
-      time.sleep(0.01)
-    
-    threading.Timer(UPDATE_TIME, self.update_hw).start()
-
-  def update_hw(self):  
-    if not self.playing_animation:
-      print("Update HW")
-      words = Clock().get_words()
-  
-      if self.last_content != words:
-        self.last_content = words
-        print("Update needed")
-    
-        leds_on = Clock().get_leds_for_words(words)
+        self.pixels = neopixel.NeoPixel(
+            LEDS_PIN, NUM_PIXELS, brightness=BRIGHTNESS, auto_write=False, pixel_order=ORDER
+        )
 
         self.power_off_all()
-        self.power_on_leds(leds_on, colors.WHITE)
-      else:
-        print("No update needed")
 
-    threading.Timer(UPDATE_TIME, self.update_hw).start()
+        for i in range(NUM_PIXELS):
+            self.power_on_led(i, colors.WHITE)
+            time.sleep(0.01)
+        
+        threading.Timer(UPDATE_TIME_SECONDS, self.update_hw).start()
 
-  def power_off_all(self):
-    self.pixels.fill(colors.OFF)
-    self.pixels.show()
+    def update_hw(self): 
+        "Update hardware state"
+   
+        if not self.playing_animation:
+            print("Update HW")
+            words = Clock().get_words()
+    
+            if self.last_content != words:
+                self.last_content = words
+                print("Update needed")
+        
+                leds_on = Clock().get_leds_for_words(words)
 
-  def execute_if_valid(self, task):
-    command = COMMANDS.get(task, INVALID_TASK)
+                self.power_off_all()
+                self.power_on_leds(leds_on, colors.WHITE)
+            else:
+                print("No update needed")
 
-    if command is not INVALID_TASK:
-        os.system(command)
-        return True
+        threading.Timer(UPDATE_TIME_SECONDS, self.update_hw).start()
 
-    return False
+    def power_off_all(self):
+        "Power off all leds"
+        self.pixels.fill(colors.OFF)
+        self.pixels.show()
 
-  def set_animation_playing(self, status):
-    self.playing_animation = status
+    def execute_if_valid(self, task):
+        "Execute a comand if valid"
 
-  def set_animation(self, animation, speed):
-    self.playing_animation = True
-    self.last_content = None
-    animation_length = len(animation)
+        command = COMMANDS.get(task, INVALID_TASK)
 
-    for step in range(animation_length):    
-      leds = [item for sublist in animation[step] for item in sublist]
+        if command is not INVALID_TASK:
+            os.system(command)
+            return True
 
-      for idx, val in enumerate(leds):
-        self.power_on_led(get_fixed_led_id(idx), val, update=False)
-      
-      self.pixels.show()
-      time.sleep(speed)
+        return False
 
-      if self.playing_animation is False:
-        return
+    def set_animation_playing(self, status):
+        "Return if animation is currently playing"
 
-    self.playing_animation = False
+        self.playing_animation = status
 
-  def power_on_led(self, led, color, update=True):
-    self.pixels[led] = color
+    def set_animation(self, animation, speed):
+        "Set the animation (and speed) to be played"
 
-    if update:
-      self.pixels.show()
+        self.playing_animation = True
+        self.last_content = None
+        animation_length = len(animation)
 
-  def power_on_leds(self, leds_arr, color):
-    for led in leds_arr:
-      self.power_on_led(led, color)
+        for step in range(animation_length):        
+            leds = [item for sublist in animation[step] for item in sublist]
+
+            for idx, val in enumerate(leds):
+                self.power_on_led(get_fixed_led_id(idx), val, update=False)
+            
+            self.pixels.show()
+            time.sleep(speed)
+
+            if self.playing_animation is False:
+                return
+
+        self.playing_animation = False
+
+    def power_on_led(self, led, color, update=True):
+        "Power on single led with a specific color"
+
+        self.pixels[led] = color
+
+        if update:
+            self.pixels.show()
+
+    def power_on_leds(self, leds_arr, color):
+        "Power on leds with a specific color"
+
+        for led in leds_arr:
+            self.power_on_led(led, color)

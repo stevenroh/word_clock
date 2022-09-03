@@ -1,3 +1,5 @@
+"All available animations"
+
 from .blink import blink_animation
 from .snake import snake_animation
 from .fill import fill_animation

@@ -1,3 +1,9 @@
+"All the constants definined for this software"
+
+UPDATE_TIME_SECONDS = 30
+NUM_PIXELS = 110
+BRIGHTNESS = 1
+
 WORDS_HOURS = {
   1: 'une',
   2: 'deux',
