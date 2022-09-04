@@ -48,6 +48,7 @@ def show_animation():
 
     animation = request.args.get('animation')
     speed = float(request.args.get('speed'))
+    param = request.args.get('param')
 
     if speed is None:
         speed = 0.2
@@ -66,6 +67,9 @@ def show_animation():
 
     if animation == "water2":
         curr_animation = water2_animation
+
+    if animation == "text":
+        curr_animation = text_animation
 
     hw_iot.set_animation(curr_animation, speed)
 

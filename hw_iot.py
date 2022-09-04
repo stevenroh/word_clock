@@ -6,6 +6,8 @@ import board
 import neopixel
 import time
 
+from numpy import ndarray
+
 from clock import Clock
 
 from constants import COMMANDS, UPDATE_TIME_SECONDS, NUM_PIXELS, BRIGHTNESS
@@ -103,7 +105,11 @@ class HWIOTUtils():
     def power_on_led(self, led, color, update=True):
         "Power on single led with a specific color"
 
-        self.pixels[led] = color
+        if(isinstance(color, ndarray)):
+            print(color.shape)
+            self.pixels[led] = (color[0], color[1], color[2])
+        else:
+            self.pixels[led] = color
 
         if update:
             self.pixels.show()

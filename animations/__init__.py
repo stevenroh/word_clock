@@ -5,3 +5,4 @@ from .snake import snake_animation
 from .fill import fill_animation
 from .water import water_animation
 from .water_2 import water2_animation
+from .text import text_animation

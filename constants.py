@@ -3,6 +3,8 @@
 UPDATE_TIME_SECONDS = 30
 NUM_PIXELS = 110
 BRIGHTNESS = 1
+MATRIX_WIDTH = 11
+MATRIX_HEIGHT = 10
 
 WORDS_HOURS = {
   1: 'une',
@@ -39,6 +41,3 @@ COMMANDS = {
   'reboot': 'reboot',
   'test': 'echo test > /tmp/test.txt',
 }
-
-MATRIX_WIDTH = 11
-MATRIX_HEIGHT = 10

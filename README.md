@@ -19,7 +19,7 @@ Copy word_clock.service to `/etc/systemd/system/`
 ## 
 
 ```
-sudo apt install git python3-pip
+sudo apt install git python3-pip libopenjp2-7-dev libatlas-base-dev
 pip3 install -r requirements.txt
 sudo python3 -m pip install --force-reinstall adafruit-blinka
 ```

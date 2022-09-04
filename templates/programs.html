@@ -14,22 +14,30 @@ Programs
     <button class="btn-program" onclick="triggerEffect('fill')">Fill</button>
     <button class="btn-program" onclick="triggerEffect('water')">Water</button>
     <button class="btn-program" onclick="triggerEffect('water2')">Water 2</button>
+    <button class="btn-program" onclick="triggerEffect('text')">Text</button>
     <button class="btn-program" disabled onclick="triggerEffect('translation')">Translation</button>
 
     <label for="speed">Speed (ms)</label><input type="text" name="speed" id="speed" value="500">
+    <label for="param">Param</label><input type="text" name="param" id="param" value="">
   </div>
 
   <script>
     var speed = 500;
+    var param = "";
+
     function triggerEffect(effectName) {
-      sendAnimation(effectName, speed);
+      sendAnimation(effectName, speed, param);
     }
 
     (function() {
-
       document.getElementById('speed').addEventListener('keyup', function() {
         console.log(this.value);
         speed = this.value;
+      });
+
+      document.getElementById('param').addEventListener('keyup', function() {
+        console.log(this.value);
+        param = this.value;
       });
     })();
     
