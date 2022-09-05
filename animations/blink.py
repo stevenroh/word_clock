@@ -2,7 +2,7 @@ from .colors import *
 
 blink_animation = []
 
-for i in range(50):
+for i in range(10):
     blink_animation.append(
         [
             [WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE],

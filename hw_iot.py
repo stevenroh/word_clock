@@ -10,7 +10,7 @@ from numpy import ndarray
 
 from clock import Clock
 
-from constants import COMMANDS, UPDATE_TIME_SECONDS, NUM_PIXELS, BRIGHTNESS
+from constants import COMMANDS, MATRIX_HEIGHT, MATRIX_WIDTH, UPDATE_TIME_SECONDS, NUM_PIXELS, BRIGHTNESS
 from animations import colors
 from animations import *
 
@@ -36,27 +36,26 @@ class HWIOTUtils():
 
         for i in range(NUM_PIXELS):
             self.power_on_led(i, colors.WHITE)
-            time.sleep(0.01)
+            time.sleep(0.005)
         
-        threading.Timer(UPDATE_TIME_SECONDS, self.update_hw).start()
+        self.update_hw()
 
     def update_hw(self): 
         "Update hardware state"
    
         if not self.playing_animation:
-            print("Update HW")
             words = Clock().get_words()
     
             if self.last_content != words:
                 self.last_content = words
-                print("Update needed")
-        
+
+                print("HW - Update needed")
                 leds_on = Clock().get_leds_for_words(words)
 
                 self.power_off_all()
                 self.power_on_leds(leds_on, colors.WHITE)
             else:
-                print("No update needed")
+                print("HW - No update needed")
 
         threading.Timer(UPDATE_TIME_SECONDS, self.update_hw).start()
 
@@ -77,12 +76,16 @@ class HWIOTUtils():
         return False
 
     def set_animation_playing(self, status):
-        "Return if animation is currently playing"
+        "Set animation playing status"
 
         self.playing_animation = status
 
-    def set_animation(self, animation, speed):
+    def set_animation(self, animation, speed, param=None):
         "Set the animation (and speed) to be played"
+
+        # if already playing an animation
+        if self.playing_animation:
+            return
 
         self.playing_animation = True
         self.last_content = None
@@ -106,8 +109,11 @@ class HWIOTUtils():
         "Power on single led with a specific color"
 
         if(isinstance(color, ndarray)):
-            print(color.shape)
-            self.pixels[led] = (color[0], color[1], color[2])
+            l = color.tolist()
+
+            if led < MATRIX_HEIGHT * MATRIX_WIDTH:
+                self.pixels[led] = (l[0], l[1], l[2])
+
         else:
             self.pixels[led] = color
 

@@ -1,31 +1,34 @@
 from constants import MATRIX_HEIGHT, MATRIX_WIDTH
 from PIL import Image, ImageDraw, ImageFont
-from numpy import asarray
+import numpy as np
+from animations.colors import OFF, RED
 import os 
 
-MARGIN = 1
+MARGIN = 0
 
 path = os.path.dirname(__file__)
 
-#font = ImageFont.truetype(os.path.join(path, "rainyhearts.ttf"))
-#img = Image.new('', (MATRIX_HEIGHT, 100))
+font = ImageFont.truetype(os.path.join(path, "rainyhearts.ttf"))
+img = Image.new("RGB", (MATRIX_HEIGHT, 100))
 
-img = Image.open(os.path.join(path, 'w.jpg'))
+# img = Image.open(os.path.join(path, 'w.jpg'))
 
-#d = ImageDraw.Draw(img)
-#d.text((MARGIN, MARGIN), "Jessica", fill=(255,0,0), font=font)
+d = ImageDraw.Draw(img)
+d.text((MARGIN, MARGIN), "Jessica", fill=RED, font=font)
 
-# img.save('test.jpg')
+img.save('test.jpg')
 
-data = asarray(img)
+data = np.asarray(img)
+arr = np.transpose(data, (1, 0, 2))
 
-print(data)
+print(arr)
 
-print(data.shape)
 text_animation = []
+text_animation.append(arr)
 
-text_animation.append(data)
-""" text_animation.append(
+"""text_animation = []
+
+text_animation.append(
     [
         [OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF],
         [OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF],
@@ -38,4 +41,5 @@ text_animation.append(data)
         [OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF],
         [OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF],
     ]
-) """
+)
+"""

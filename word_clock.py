@@ -1,4 +1,6 @@
 from flask import Flask, render_template, jsonify, request
+from animations.colors import BLUE
+from animations.fill import gen_fill_animation
 from hw_iot import HWIOTUtils
 from clock import Clock
 from animations import *
@@ -40,6 +42,8 @@ def execute():
 def set_clock_mode():
     "Set clock mode"
     hw_iot.set_animation_playing(False)
+    hw_iot.update_hw()
+
     return "ok"
 
 @app.route('/show')
@@ -60,7 +64,7 @@ def show_animation():
         curr_animation = snake_animation
 
     if animation == "fill":
-        curr_animation = fill_animation
+        curr_animation = gen_fill_animation(color=BLUE)
 
     if animation == "water":
         curr_animation = water_animation
@@ -86,4 +90,4 @@ def leds_status():
 
 
 if __name__ == '__main__':
-    app.run(host='::', port=8000, debug=True)
+    app.run(host='::', port=8000, debug=False)
