@@ -70,6 +70,10 @@ class HWIOTUtils():
         command = COMMANDS.get(task, INVALID_TASK)
 
         if command is not INVALID_TASK:
+
+            if command is COMMANDS['poweroff']:
+                self.power_off_all()
+
             os.system(command)
             return True
 
