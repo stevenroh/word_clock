@@ -2,17 +2,18 @@
 
 import threading
 import os
+import time
 import board
 import neopixel
-import time
 
 from numpy import ndarray
 
 from clock import Clock
+from constants import COMMANDS
+from constants import MATRIX_HEIGHT, MATRIX_WIDTH
+from constants import UPDATE_TIME_SECONDS, NUM_PIXELS, BRIGHTNESS
 
-from constants import COMMANDS, MATRIX_HEIGHT, MATRIX_WIDTH, UPDATE_TIME_SECONDS, NUM_PIXELS, BRIGHTNESS
 from animations import colors
-from animations import *
 
 from utils import get_fixed_led_id
 
@@ -37,15 +38,15 @@ class HWIOTUtils():
         for i in range(NUM_PIXELS):
             self.power_on_led(i, colors.WHITE)
             time.sleep(0.005)
-        
+ 
         self.update_hw()
 
     def update_hw(self): 
         "Update hardware state"
-   
+
         if not self.playing_animation:
             words = Clock().get_words()
-    
+
             if self.last_content != words:
                 self.last_content = words
 
@@ -114,7 +115,6 @@ class HWIOTUtils():
 
         if(isinstance(color, ndarray)):
             l = color.tolist()
-
             if led < MATRIX_HEIGHT * MATRIX_WIDTH:
                 self.pixels[led] = (l[0], l[1], l[2])
 
